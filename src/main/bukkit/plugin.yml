@@ -1,0 +1,8 @@
+name: MC-Murder
+main: eu.menzerath.bukkit.mcmurder.Murder
+version: 1.0
+
+commands:
+  mcm:
+    description: MC-Murder
+    usage: Do /mcm for a list of commands.
