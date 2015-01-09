@@ -6,11 +6,11 @@
 
     <groupId>eu.menzerath.bukkit</groupId>
     <artifactId>MC-Murder</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>MC-Murder</name>
-    <description>Minecraft (Bukkit) Mini-Game: Find the Murderer and kill him before he kills you!</description>
+    <description>Minecraft (Bukkit/Spigot) Mini-Game: Find the Murderer and kill him before he kills you!</description>
     <url>https://github.com/MarvinMenzerath/MC-Murder</url>
 
     <properties>
@@ -19,18 +19,16 @@
 
     <repositories>
         <repository>
-            <id>Bukkit</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
+            <id>Spigot</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.7.9-R0.2</version>
-            <type>jar</type>
-            <scope>provided</scope>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

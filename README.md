@@ -1,5 +1,5 @@
 # MC-Murder
-MC-Murder is a Minecraft (Bukkit) Mini-Game. You have to find and kill the Murderer among every Player in your game. But if you are the Murderer: kill everyone!
+MC-Murder is a Minecraft (Bukkit/Spigot) Mini-Game. You have to find and kill the Murderer among every Player in your game. But if you are the Murderer: kill everyone!
 
 ## How To Play
 If you know how to play "Garry's Mod: Murder", you know how to play this. Otherwise here a short introduction:
@@ -49,14 +49,14 @@ This can be changed in the config-file (see `gameWorldPrefix`).
 * Reload config: `/mcm reload`
 
 ## Compatibility
-Compiled and Tested with (Craft)Bukkit **1.7.9** (Beta-Build).
+Compiled and Tested with (Craft)Bukkit / Spigot **1.8** (Beta-Build).
 
 ## FAQ
 **Q**: My Murderer-Axe is gone! :(  
 **A**: You will get another one in about 30 Seconds
 
 ## License
-Copyright (C) 2014 [Marvin Menzerath](http://menzerath.eu)
+Copyright (C) 2014-2015 [Marvin Menzerath](https://menzerath.eu)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
