@@ -1,6 +1,5 @@
 # MC-Murder
-MC-Murder is a Minecraft (Bukkit/Spigot) Mini-Game. You have to find and kill the Murderer among every Player in your game. But if you are the Murderer: kill everyone!  
-[![Build Status](https://drone.io/github.com/MarvinMenzerath/MC-Murder/status.png)](https://drone.io/github.com/MarvinMenzerath/MC-Murder/latest)
+MC-Murder is a Minecraft (Bukkit/Spigot) Mini-Game. You have to find and kill the Murderer among every Player in your game. But if you are the Murderer: kill everyone!
 
 ## How To Play
 If you know how to play "Garry's Mod: Murder", you know how to play this. Otherwise here a short introduction:
