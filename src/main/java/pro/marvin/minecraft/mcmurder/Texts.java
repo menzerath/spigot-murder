@@ -46,6 +46,6 @@ public class Texts {
 	// End: MC-Murder
 
 	// Begin: Other
-	public static final String COPYRIGHT = "(c) 2014-2015: Marvin Menzerath - https://menzerath.eu";
+	public static final String COPYRIGHT = "(c) 2014-2017: Marvin Menzerath";
 	// End: Other
 }
