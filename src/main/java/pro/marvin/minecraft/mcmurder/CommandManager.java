@@ -1,4 +1,4 @@
-package eu.menzerath.bukkit.mcmurder;
+package pro.marvin.minecraft.mcmurder;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,5 +1,5 @@
 name: MC-Murder
-main: eu.menzerath.bukkit.mcmurder.Murder
+main: pro.marvin.minecraft.mcmurder.Murder
 version: 1.0.1
 
 commands:

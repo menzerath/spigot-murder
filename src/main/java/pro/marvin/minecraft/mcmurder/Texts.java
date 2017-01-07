@@ -1,4 +1,4 @@
-package eu.menzerath.bukkit.mcmurder;
+package pro.marvin.minecraft.mcmurder;
 
 public class Texts {
     // Begin: Main
