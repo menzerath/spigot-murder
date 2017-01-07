@@ -47,17 +47,3 @@ This can be changed in the config-file (see `gameWorldPrefix`).
 * Set arena-spawn: `/mcm setSpawn [ARENA] [SPAWN]`
 * Enable / Disable arena: `/mcm enable/disable [ARENA]`
 * Reload config: `/mcm reload`
-
-## Compatibility
-Compiled and Tested with (Craft)Bukkit / Spigot **1.8** (Beta-Build).
-
-## FAQ
-**Q**: My Murderer-Axe is gone! :(  
-**A**: You will get another one in about 30 Seconds
-
-## License
-Copyright (C) 2014-2015 [Marvin Menzerath](https://menzerath.eu)
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [GNU General Public License](https://github.com/MarvinMenzerath/MC-Murder/blob/master/LICENSE) for more details.
