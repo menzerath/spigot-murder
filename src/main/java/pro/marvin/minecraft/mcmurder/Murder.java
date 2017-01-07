@@ -30,18 +30,18 @@ import java.util.*;
 
 public class Murder extends JavaPlugin implements Listener {
     // Game-stats ...
-    public HashMap<Integer, Boolean> arenaConfig = new HashMap<Integer, Boolean>();
-    private HashMap<Integer, Block> updateSigns = new HashMap<Integer, Block>();
+    public HashMap<Integer, Boolean> arenaConfig = new HashMap<>();
+    private HashMap<Integer, Block> updateSigns = new HashMap<>();
 
-    private HashMap<Integer, Boolean> gameStarted = new HashMap<Integer, Boolean>();
-    private HashMap<Integer, Integer> countdown = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Boolean> gameStarted = new HashMap<>();
+    private HashMap<Integer, Integer> countdown = new HashMap<>();
 
-    public List<Player> playersList = new ArrayList<Player>();
-    public HashMap<String, Integer> playersMap = new HashMap<String, Integer>();
-    public HashMap<String, String> playersTeam = new HashMap<String, String>();
-    public HashMap<String, Boolean> playersAlive = new HashMap<String, Boolean>();
+    public List<Player> playersList = new ArrayList<>();
+    public HashMap<String, Integer> playersMap = new HashMap<>();
+    public HashMap<String, String> playersTeam = new HashMap<>();
+    public HashMap<String, Boolean> playersAlive = new HashMap<>();
 
-    private HashMap<String, Long> reloadTime = new HashMap<String, Long>();
+    private HashMap<String, Long> reloadTime = new HashMap<>();
 
     // Config-file
     public static int maxPlayers = 8;
@@ -145,7 +145,7 @@ public class Murder extends JavaPlugin implements Listener {
             } else if (playerIsBystander(p)) {
                 p.sendMessage(Texts.PRE_TEXT + Texts.GAME_BYSTANDER);
             }
-            p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+            p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 1);
         }
 
         // Start!
@@ -236,7 +236,7 @@ public class Murder extends JavaPlugin implements Listener {
      */
     public void playerJoinedArena(final Player p, final int mapId) {
         if (playersList.contains(p)) {
-            // Player is already ingame
+            // Player is already in game
             p.sendMessage(Texts.PRE_TEXT + Texts.GAME_ALREADY_INGAME);
             return;
         }
@@ -300,38 +300,36 @@ public class Murder extends JavaPlugin implements Listener {
      * @param p Player which will be prepared
      */
     private void preparePlayer(final Player p) {
-        getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-            public void run() {
-                p.setAllowFlight(false);
-                p.setGameMode(GameMode.ADVENTURE);
-                p.setAllowFlight(false);
-                p.setHealth(20);
-                p.setFoodLevel(20);
-                p.setLevel(0);
-                p.teleport(randomSpawn(getPlayersArena(p)));
-                p.getInventory().clear();
+        getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            p.setAllowFlight(false);
+            p.setGameMode(GameMode.ADVENTURE);
+            p.setAllowFlight(false);
+            p.setHealth(20);
+            p.setFoodLevel(20);
+            p.setLevel(0);
+            p.teleport(randomSpawn(getPlayersArena(p)));
+            p.getInventory().clear();
 
-                playersAlive.put(p.getName(), true);
-                reloadTime.put(p.getName(), System.currentTimeMillis() - 5000);
+            playersAlive.put(p.getName(), true);
+            reloadTime.put(p.getName(), System.currentTimeMillis() - 5000);
 
-                if (!getGameStarted(getPlayersArena(p))) {
-                    return;
-                }
+            if (!getGameStarted(getPlayersArena(p))) {
+                return;
+            }
 
-                if (playerIsMurderer(p)) {
-                    p.getInventory().setHeldItemSlot(1);
-                    List<String> lsKnife = new ArrayList<String>();
-                    lsKnife.add(Texts.GAME_HOWTO_KNIFE);
-                    p.getInventory().addItem(setName(new ItemStack(Material.STONE_AXE, 1), "§2Knife", lsKnife, 1));
-                } else if (playerIsBystanderWithWeapon(p)) {
-                    p.getInventory().setHeldItemSlot(1);
-                    List<String> lsWeapon = new ArrayList<String>();
-                    lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
-                    lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
-                    p.getInventory().addItem(setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
-                } else {
-                    p.getInventory().setHeldItemSlot(0);
-                }
+            if (playerIsMurderer(p)) {
+                p.getInventory().setHeldItemSlot(1);
+                List<String> lsKnife = new ArrayList<>();
+                lsKnife.add(Texts.GAME_HOWTO_KNIFE);
+                p.getInventory().addItem(setName(new ItemStack(Material.STONE_AXE, 1), "§2Knife", lsKnife, 1));
+            } else if (playerIsBystanderWithWeapon(p)) {
+                p.getInventory().setHeldItemSlot(1);
+                List<String> lsWeapon = new ArrayList<>();
+                lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
+                lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
+                p.getInventory().addItem(setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
+            } else {
+                p.getInventory().setHeldItemSlot(0);
             }
         });
     }
@@ -371,7 +369,7 @@ public class Murder extends JavaPlugin implements Listener {
             if (playerIsMurderer(p)) {
                 stopGame(oldArena, true);
             } else if (p.getInventory().contains(Material.WOOD_HOE)) {
-                List<String> lsWeapon = new ArrayList<String>();
+                List<String> lsWeapon = new ArrayList<>();
                 lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
                 lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
                 p.getWorld().dropItemNaturally(p.getLocation(), setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
@@ -395,7 +393,7 @@ public class Murder extends JavaPlugin implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         // It's the knife! Throw it!
-        if (getPlayerIngame(e.getPlayer()) && e.getPlayer().getItemInHand().getType() == Material.STONE_AXE && playerIsMurderer(e.getPlayer()) && getGameStarted(getPlayersArena(e.getPlayer()))) {
+        if (getPlayerInGame(e.getPlayer()) && e.getPlayer().getItemInHand().getType() == Material.STONE_AXE && playerIsMurderer(e.getPlayer()) && getGameStarted(getPlayersArena(e.getPlayer()))) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getType() != Material.WOOD_BUTTON)) {
                 if (e.getPlayer().getItemInHand().hasItemMeta() && e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals("§2Knife")) {
                     final Player p = e.getPlayer();
@@ -410,7 +408,7 @@ public class Murder extends JavaPlugin implements Listener {
                         @Override
                         public void run() {
                             if (i.isOnGround()) {
-                                i.getWorld().playSound(i.getLocation(), Sound.ANVIL_LAND, (float) 0.1, (float) -5);
+                                i.getWorld().playSound(i.getLocation(), Sound.BLOCK_ANVIL_LAND, (float) 0.1, (float) -5);
                                 cancel();
                                 return;
                             }
@@ -419,15 +417,15 @@ public class Murder extends JavaPlugin implements Listener {
                                 for (Player victim : getPlayerInArena(getPlayersArena(p))) {
                                     if (victim.getLocation().distance(i.getLocation()) <= 1.5D && !playerIsMurderer(victim) && playerIsAlive(victim) && getGameStarted(getPlayersArena(victim))) {
                                         if (victim.getInventory().contains(Material.WOOD_HOE)) {
-                                            List<String> lsWeapon = new ArrayList<String>();
+                                            List<String> lsWeapon = new ArrayList<>();
                                             lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
                                             lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
                                             victim.getWorld().dropItemNaturally(victim.getLocation(), setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
                                             victim.setItemInHand(new ItemStack(Material.AIR));
                                         }
 
-                                        p.playSound(victim.getLocation(), Sound.ORB_PICKUP, 3, 1);
-                                        victim.playSound(victim.getLocation(), Sound.VILLAGER_DEATH, 3, 1);
+                                        p.playSound(victim.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 3, 1);
+                                        victim.playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3, 1);
                                         victim.sendMessage(Texts.PRE_TEXT + Texts.GAME_DEATH);
                                         playerDeath(victim);
 
@@ -439,7 +437,7 @@ public class Murder extends JavaPlugin implements Listener {
                                         if (playersAlive < 2) {
                                             for (Player p : getPlayerInArena(getPlayersArena(victim))) {
                                                 p.sendMessage(Texts.PRE_TEXT + Texts.GAME_MURDERER_WINS);
-                                                p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 3, 1);
+                                                p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 3, 1);
                                             }
                                             stopGame(getPlayersArena(p), true);
                                         }
@@ -451,7 +449,7 @@ public class Murder extends JavaPlugin implements Listener {
                         }
                     };
                     runnable.runTaskTimer(this, 1, 1);
-                    p.getWorld().playSound(e.getPlayer().getLocation(), Sound.ENDERDRAGON_HIT, (float)0.5, 1);
+                    p.getWorld().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, (float)0.5, 1);
 
                     BukkitRunnable runnableWeaponBack = new BukkitRunnable() {
                         int ticksUntilWeaponBack = 20 * 20;
@@ -461,7 +459,7 @@ public class Murder extends JavaPlugin implements Listener {
                             if (ticksUntilWeaponBack == 0) {
                                 if (!p.getInventory().contains(Material.STONE_AXE) && getGameStarted(getPlayersArena(p)) && playerIsAlive(p)) {
                                     p.getInventory().setHeldItemSlot(1);
-                                    List<String> lsKnife = new ArrayList<String>();
+                                    List<String> lsKnife = new ArrayList<>();
                                     lsKnife.add(Texts.GAME_HOWTO_KNIFE);
                                     p.getInventory().addItem(setName(new ItemStack(Material.STONE_AXE, 1), "§2Knife", lsKnife, 1));
 
@@ -484,7 +482,7 @@ public class Murder extends JavaPlugin implements Listener {
         }
 
         // It's the gun! Throw the bullet!
-        if (getPlayerIngame(e.getPlayer()) && e.getPlayer().getItemInHand().getType() == Material.WOOD_HOE && getGameStarted(getPlayersArena(e.getPlayer()))) {
+        if (getPlayerInGame(e.getPlayer()) && e.getPlayer().getItemInHand().getType() == Material.WOOD_HOE && getGameStarted(getPlayersArena(e.getPlayer()))) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getType() != Material.WOOD_BUTTON)) {
                 if (e.getPlayer().getItemInHand().hasItemMeta() && e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals("§2Gun")) {
                     Player p = e.getPlayer();
@@ -494,17 +492,17 @@ public class Murder extends JavaPlugin implements Listener {
                         ball.setShooter(p);
                         ball.setVelocity(vec);
 
-                        e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(), Sound.ENDERDRAGON_HIT, 1, 1);
+                        e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, 1, 1);
                         reloadTime.put(p.getName(), System.currentTimeMillis());
                     } else {
-                        p.playSound(p.getLocation(), Sound.CLICK, 1, 1);
+                        p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
                     }
                 }
             }
         }
 
         // Do not allow anything else except WOOD_BUTTON
-        if (getPlayerIngame(e.getPlayer())) {
+        if (getPlayerInGame(e.getPlayer())) {
             // Its a wooden button!
             if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.WOOD_BUTTON)) {
                 e.setCancelled(true);
@@ -523,7 +521,7 @@ public class Murder extends JavaPlugin implements Listener {
 
                 // Teleport player to the lobby
                 if (theSign.getLine(2).equals(ChatColor.DARK_GREEN + "--> Lobby <--")) {
-                    if (getPlayerIngame(e.getPlayer())) {
+                    if (getPlayerInGame(e.getPlayer())) {
                         playersList.remove(e.getPlayer());
                         playersTeam.remove(e.getPlayer().getName());
                         playersMap.remove(e.getPlayer().getName());
@@ -541,21 +539,21 @@ public class Murder extends JavaPlugin implements Listener {
     @EventHandler
     public void onHit(EntityDamageByEntityEvent e) {
         // Killed by murderer
-        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player && getPlayerIngame((Player) e.getEntity()) && getPlayerIngame((Player) e.getDamager())) {
+        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player && getPlayerInGame((Player) e.getEntity()) && getPlayerInGame((Player) e.getDamager())) {
             Player victim = (Player)e.getEntity();
             Player damager = (Player)e.getDamager();
 
             if (playerIsMurderer(damager) && damager.getItemInHand().getType() == Material.STONE_AXE && playerIsAlive(victim)) {
                 if (victim.getInventory().contains(Material.WOOD_HOE)) {
-                    List<String> lsWeapon = new ArrayList<String>();
+                    List<String> lsWeapon = new ArrayList<>();
                     lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
                     lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
                     victim.getWorld().dropItemNaturally(victim.getLocation(), setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
                     victim.setItemInHand(new ItemStack(Material.AIR));
                 }
 
-                damager.playSound(victim.getLocation(), Sound.ORB_PICKUP, 3, 1);
-                victim.playSound(victim.getLocation(), Sound.VILLAGER_DEATH, 3, 1);
+                damager.playSound(victim.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 3, 1);
+                victim.playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3, 1);
                 victim.sendMessage(Texts.PRE_TEXT + Texts.GAME_DEATH);
                 playerDeath(victim);
 
@@ -567,7 +565,7 @@ public class Murder extends JavaPlugin implements Listener {
                 if (playersAlive < 2) {
                     for (Player p : getPlayerInArena(getPlayersArena(victim))) {
                         p.sendMessage(Texts.PRE_TEXT + Texts.GAME_MURDERER_WINS);
-                        p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 3, 1);
+                        p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 3, 1);
                     }
                     stopGame(getPlayersArena(damager), true);
                 }
@@ -576,7 +574,7 @@ public class Murder extends JavaPlugin implements Listener {
             return;
         }
 
-        if (e.getDamager() instanceof Snowball && e.getEntity() instanceof Player && getPlayerIngame((Player) e.getEntity())) {
+        if (e.getDamager() instanceof Snowball && e.getEntity() instanceof Player && getPlayerInGame((Player) e.getEntity())) {
             // A player shot you
             final Player damager = (Player) ((Snowball) e.getDamager()).getShooter();
             final Player victim = (Player) e.getEntity();
@@ -585,9 +583,9 @@ public class Murder extends JavaPlugin implements Listener {
                 // Killed the murderer!
                 for (Player p : getPlayerInArena(getPlayersArena(victim))) {
                     p.sendMessage(Texts.PRE_TEXT + Texts.GAME_KILLED_MURDERER.replace("%killer", damager.getDisplayName()));
-                    p.playSound(p.getLocation(), Sound.LEVEL_UP, 3, 1);
+                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 3, 1);
                 }
-                victim.playSound(victim.getLocation(), Sound.VILLAGER_DEATH, 3, 1);
+                victim.playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3, 1);
                 playerDeath(victim);
                 stopGame(getPlayersArena(victim), true);
             } else if ((playerIsBystander(victim) || playerIsBystanderWithWeapon(victim)) && playerIsAlive(victim)) {
@@ -596,7 +594,7 @@ public class Murder extends JavaPlugin implements Listener {
                 victim.sendMessage(Texts.PRE_TEXT + Texts.GAME_KILLED_BY_BYSTANDER);
 
                 if (damager.getInventory().contains(Material.WOOD_HOE)) {
-                    List<String> lsWeapon = new ArrayList<String>();
+                    List<String> lsWeapon = new ArrayList<>();
                     lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
                     lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
                     damager.getWorld().dropItemNaturally(damager.getLocation(), setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
@@ -604,8 +602,8 @@ public class Murder extends JavaPlugin implements Listener {
                     reloadTime.put(damager.getName(), System.currentTimeMillis());
                 }
 
-                victim.playSound(victim.getLocation(), Sound.VILLAGER_DEATH, 3, 1);
-                damager.playSound(damager.getLocation(), Sound.GHAST_MOAN, 3, 1);
+                victim.playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3, 1);
+                damager.playSound(damager.getLocation(), Sound.ENTITY_GHAST_HURT, 3, 1);
 
                 damager.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 50));
                 damager.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 1));
@@ -632,7 +630,7 @@ public class Murder extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player && getPlayerIngame((Player)e.getEntity())) {
+        if (e.getEntity() instanceof Player && getPlayerInGame((Player)e.getEntity())) {
             Player p = (Player)e.getEntity();
             // No fall-damage, suicide or drowning while in-arena but not in-game!
             if ((e.getCause().equals(EntityDamageEvent.DamageCause.FALL) || e.getCause().equals(EntityDamageEvent.DamageCause.SUICIDE) || e.getCause().equals(EntityDamageEvent.DamageCause.DROWNING) || e.getCause().equals(EntityDamageEvent.DamageCause.FIRE) || e.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK)) && (countdown.get(getPlayersArena(p)) != -1 || getPlayerInArena(getPlayersArena(p)).size() == 1) || !playerIsAlive(p)) {
@@ -642,19 +640,19 @@ public class Murder extends JavaPlugin implements Listener {
                     if (playerIsMurderer(p)) {
                         for (Player players : getPlayerInArena(getPlayersArena(p))) {
                             players.sendMessage(Texts.PRE_TEXT + Texts.GAME_KILLED_MURDERER.replace("%killer", e.getCause().toString()));
-                            players.playSound(p.getLocation(), Sound.LEVEL_UP, 3, 1);
+                            players.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 3, 1);
                         }
                         stopGame(getPlayersArena(p), true);
                     } else {
                         if (p.getInventory().contains(Material.WOOD_HOE)) {
-                            List<String> lsWeapon = new ArrayList<String>();
+                            List<String> lsWeapon = new ArrayList<>();
                             lsWeapon.add(Texts.GAME_HOWTO_WEAPON);
                             lsWeapon.add(Texts.GAME_RELOAD_WEAPON + "5s");
                             p.getWorld().dropItemNaturally(p.getLocation(), setName(new ItemStack(Material.WOOD_HOE, 1), "§2Gun", lsWeapon, 1));
                             p.setItemInHand(new ItemStack(Material.AIR));
                             reloadTime.put(p.getName(), System.currentTimeMillis());
                         }
-                        p.playSound(p.getLocation(), Sound.VILLAGER_DEATH, 3, 1);
+                        p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3, 1);
                         p.sendMessage(Texts.PRE_TEXT + Texts.GAME_KILLED_BY_UNKNOWN);
                         playerDeath(p);
 
@@ -666,7 +664,7 @@ public class Murder extends JavaPlugin implements Listener {
                         if (playersAlive < 2) {
                             for (Player players : getPlayerInArena(getPlayersArena(p))) {
                                 players.sendMessage(Texts.PRE_TEXT + Texts.GAME_MURDERER_WINS);
-                                players.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 3, 1);
+                                players.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 3, 1);
                             }
                             stopGame(getPlayersArena(p), true);
                         }
@@ -687,19 +685,19 @@ public class Murder extends JavaPlugin implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         // No block-breaking in-game!
-        if (getPlayerIngame(e.getPlayer())) e.setCancelled(true);
+        if (getPlayerInGame(e.getPlayer())) e.setCancelled(true);
     }
 
     @EventHandler
     public void playerDropItem(PlayerDropItemEvent e) {
         // Why would you want to drop your weapons?!
-        if (getPlayerIngame(e.getPlayer())) e.setCancelled(true);
+        if (getPlayerInGame(e.getPlayer())) e.setCancelled(true);
     }
 
     @EventHandler
     public void playerPickupItem(PlayerPickupItemEvent e) {
         // The Murderer is not allowed to pick up the gun + he is the only one who is allowed to pick up the knife
-        if (getPlayerIngame(e.getPlayer())) {
+        if (getPlayerInGame(e.getPlayer())) {
             if (e.getItem().getItemStack().getType() == Material.STONE_AXE && playerIsAlive(e.getPlayer()) && playerIsMurderer(e.getPlayer())) {
                 e.setCancelled(false);
             } else if (e.getItem().getItemStack().getType() == Material.WOOD_HOE && playerIsAlive(e.getPlayer()) && (playerIsBystander(e.getPlayer()) || playerIsBystanderWithWeapon(e.getPlayer())) && System.currentTimeMillis() - (reloadTime.get(e.getPlayer().getName())) >= 20000) {
@@ -714,42 +712,40 @@ public class Murder extends JavaPlugin implements Listener {
      * Manages the countdowns in every arena
      */
     private void countdown() {
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
-                for (int i = 1; i < 100; i++) {
-                    if (countdown.get(i) != -1) {
-                        if (countdown.get(i) != 0) {
-                            if (getPlayerInArena(i).size() < 2) {
-                                for (Player players : getPlayerInArena(i)) {
-                                    players.sendMessage(Texts.PRE_TEXT + Texts.GAME_START_STOPPED);
-                                    players.setLevel(0);
-                                }
-                                countdown.put(i, -1);
-                                return;
-                            }
-
-                            if (countdown.get(i) < 6) {
-                                for (Player players : getPlayerInArena(i)) {
-                                    players.playSound(players.getLocation(), Sound.CLICK, 3, 1);
-                                }
-                            }
-
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (int i = 1; i < 100; i++) {
+                if (countdown.get(i) != -1) {
+                    if (countdown.get(i) != 0) {
+                        if (getPlayerInArena(i).size() < 2) {
                             for (Player players : getPlayerInArena(i)) {
-                                players.setLevel(countdown.get(i));
+                                players.sendMessage(Texts.PRE_TEXT + Texts.GAME_START_STOPPED);
+                                players.setLevel(0);
                             }
-                            countdown.put(i, countdown.get(i) - 1);
-                        } else {
-                            countdown.put(i, countdown.get(i) - 1);
-                            if (getPlayerInArena(i).size() < 2) {
-                                for (Player players : getPlayerInArena(i)) {
-                                    players.sendMessage(Texts.PRE_TEXT + Texts.GAME_START_STOPPED);
-                                    players.setLevel(countdown.get(0));
-                                }
-                                countdown.put(i, -1);
-                                return;
-                            }
-                            startGame(i);
+                            countdown.put(i, -1);
+                            return;
                         }
+
+                        if (countdown.get(i) < 6) {
+                            for (Player players : getPlayerInArena(i)) {
+                                players.playSound(players.getLocation(), Sound.UI_BUTTON_CLICK, 3, 1);
+                            }
+                        }
+
+                        for (Player players : getPlayerInArena(i)) {
+                            players.setLevel(countdown.get(i));
+                        }
+                        countdown.put(i, countdown.get(i) - 1);
+                    } else {
+                        countdown.put(i, countdown.get(i) - 1);
+                        if (getPlayerInArena(i).size() < 2) {
+                            for (Player players : getPlayerInArena(i)) {
+                                players.sendMessage(Texts.PRE_TEXT + Texts.GAME_START_STOPPED);
+                                players.setLevel(countdown.get(0));
+                            }
+                            countdown.put(i, -1);
+                            return;
+                        }
+                        startGame(i);
                     }
                 }
             }
@@ -760,34 +756,32 @@ public class Murder extends JavaPlugin implements Listener {
      * Shows the time until player is able to shoot again in the exp-bar
      */
     private void reloadTime() {
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
-                for (Player p : playersList) {
-                    long time = System.currentTimeMillis() - reloadTime.get(p.getName());
-                            if (time < 500) {
-                                p.setExp((float) 1);
-                            } else if (time < 1000) {
-                                p.setExp((float) 0.9);
-                            } else if (time < 1500) {
-                                p.setExp((float) 0.8);
-                            } else if (time < 2000) {
-                                p.setExp((float) 0.7);
-                            } else if (time < 2500) {
-                                p.setExp((float) 0.6);
-                            } else if (time < 3000) {
-                                p.setExp((float) 0.5);
-                            } else if (time < 3500) {
-                                p.setExp((float) 0.4);
-                            } else if (time < 4000) {
-                                p.setExp((float) 0.3);
-                            } else if (time < 4500) {
-                                p.setExp((float) 0.2);
-                            } else if (time < 5000) {
-                                p.setExp((float) 0.1);
-                            } else {
-                                p.setExp((float) 0.0);
-                            }
-                }
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Player p : playersList) {
+                long time = System.currentTimeMillis() - reloadTime.get(p.getName());
+                        if (time < 500) {
+                            p.setExp((float) 1);
+                        } else if (time < 1000) {
+                            p.setExp((float) 0.9);
+                        } else if (time < 1500) {
+                            p.setExp((float) 0.8);
+                        } else if (time < 2000) {
+                            p.setExp((float) 0.7);
+                        } else if (time < 2500) {
+                            p.setExp((float) 0.6);
+                        } else if (time < 3000) {
+                            p.setExp((float) 0.5);
+                        } else if (time < 3500) {
+                            p.setExp((float) 0.4);
+                        } else if (time < 4000) {
+                            p.setExp((float) 0.3);
+                        } else if (time < 4500) {
+                            p.setExp((float) 0.2);
+                        } else if (time < 5000) {
+                            p.setExp((float) 0.1);
+                        } else {
+                            p.setExp((float) 0.0);
+                        }
             }
         }, 0, 1);
     }
@@ -796,30 +790,28 @@ public class Murder extends JavaPlugin implements Listener {
      * Updates the signs every half second and shows game-status and player-count
      */
     private void updateSigns() {
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
-                for (Map.Entry<Integer, Block> b : updateSigns.entrySet()) {
-                    if (isSign(b.getValue())) {
-                        // Load chunk, prevent NullPointerExceptions
-                        b.getValue().getChunk().load();
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Map.Entry<Integer, Block> b : updateSigns.entrySet()) {
+                if (isSign(b.getValue())) {
+                    // Load chunk, prevent NullPointerExceptions
+                    b.getValue().getChunk().load();
 
-                        Sign mySign;
-                        try {
-                            mySign = (Sign) b.getValue().getState();
-                        } catch (NullPointerException e) {
-                            Bukkit.getLogger().warning("Signs' chunk not loaded! Will update later...");
-                            continue;
-                        }
+                    Sign mySign;
+                    try {
+                        mySign = (Sign) b.getValue().getState();
+                    } catch (NullPointerException e) {
+                        Bukkit.getLogger().warning("Signs' chunk not loaded! Will update later...");
+                        continue;
+                    }
 
-                        if (!arenaConfig.get(b.getKey())) {
-                            mySign.setLine(1, ChatColor.RED + "Disabled");
-                            mySign.setLine(2, ChatColor.RED + "0 / " + maxPlayers);
-                            mySign.update();
-                        } else {
-                            mySign.setLine(1, getArenaStatus(b.getKey()));
-                            mySign.setLine(2, ChatColor.RED + "" + getPlayerInArena(b.getKey()).size() + " / " + maxPlayers);
-                            mySign.update();
-                        }
+                    if (!arenaConfig.get(b.getKey())) {
+                        mySign.setLine(1, ChatColor.RED + "Disabled");
+                        mySign.setLine(2, ChatColor.RED + "0 / " + maxPlayers);
+                        mySign.update();
+                    } else {
+                        mySign.setLine(1, getArenaStatus(b.getKey()));
+                        mySign.setLine(2, ChatColor.RED + "" + getPlayerInArena(b.getKey()).size() + " / " + maxPlayers);
+                        mySign.update();
                     }
                 }
             }
@@ -922,7 +914,7 @@ public class Murder extends JavaPlugin implements Listener {
      * @return A list of every player in the arena
      */
     public List<Player> getPlayerInArena(int map) {
-        List<Player> myPlayers = new ArrayList<Player>();
+        List<Player> myPlayers = new ArrayList<>();
         for (Player p : playersList) {
             if (playersMap.get(p.getName()).equals(map)) {
                 myPlayers.add(p);
@@ -950,7 +942,7 @@ public class Murder extends JavaPlugin implements Listener {
      * @param p Which player will be checked
      * @return If the player is currently in-game
      */
-    public boolean getPlayerIngame(Player p) {
+    public boolean getPlayerInGame(Player p) {
         return playersList.contains(p);
     }
 

@@ -40,7 +40,7 @@ public class CommandManager implements CommandExecutor {
                 // Teleport player to lobby if he/she is not in-game
                 if (args[0].equalsIgnoreCase("lobby")) {
                     Player player = (Player) sender;
-                    if (plugin.getPlayerIngame(player)) return true;
+                    if (plugin.getPlayerInGame(player)) return true;
                     player.teleport(plugin.mcmSpawn());
                     return true;
                 }
