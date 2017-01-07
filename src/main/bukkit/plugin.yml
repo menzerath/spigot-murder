@@ -1,6 +1,6 @@
 name: MC-Murder
 main: pro.marvin.minecraft.mcmurder.Murder
-version: 1.0.1
+version: 1.0.2
 
 commands:
   mcm:
