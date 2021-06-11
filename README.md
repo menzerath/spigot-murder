@@ -11,7 +11,7 @@ If you know how to play "Garry's Mod: Murder", you know how to play this. Otherw
 ## Setup
 Follow these steps to setup and configure "MC-Murder" on your server:
 
-1. Download the plugin: Grab the current release from [here](https://github.com/MarvinMenzerath/MC-Murder/releases) and put it in your plugins-folder.
+1. Download the plugin: Grab the current release from [here](https://github.com/menzerath/spigot-murder/releases) and put it in your plugins-folder.
 2. Download Multiverse: Grab the current release from [here](https://dev.bukkit.org/projects/multiverse-core) and put it in your plugins-folder.
 3. Upload the maps: Upload the maps you want to play on and name them `mcm-wX`, where "X" has to be a unique number. This will be the id of the arena. Example: `mcm-w1`
 This can be changed in the config-file (see `gameWorldPrefix`).
